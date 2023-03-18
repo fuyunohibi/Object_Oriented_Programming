@@ -1,132 +1,269 @@
-#include <vector>
-#include <string>
-#include <sstream>
 #include <iostream>
+#include <map>
+#include <array>
+#include <vector>
 #include <algorithm>
+#include <string>
 
 using namespace std;
 
-class picture{
-    private :
-    
-    public:
-        int width;
-        int height;
-        vector<string> data;
-    picture(vector<string> data){
-        this->data = data;
+// Write a test program for testing all use cases of a Picture object and its operations including the test for constructing Picture object, getting its width and height, printing its contents, passing Picture to a function, returning Picture from a function, constructing a Picture from another Picture, and copying a Picture object.
+
+class Picture
+{
+private:
+    vector<string> content;
+    int width;
+    int height;
+
+public:
+    // Constructor
+    Picture()
+    {
         this->width = 0;
-        for(auto& x : data){
-            if(x.size() > this->width){
+        this->height = 0;
+    }
+
+    // function - construct a Picture object from another Picture object
+    Picture(vector<string> content)
+    {
+        this->content = content;
+        this->width = 0;
+        for (auto &x : content)
+        {
+            if (x.size() > this->width)
+            {
                 this->width = x.size();
             }
         }
-        this->height = data.size();
+        this->height = content.size();
+    }
+    // Destructor
+    ~Picture()
+    {
+        cout << "Destructor is called" << endl;
     }
 
-    int get_width(){
+    // Function Definition
+    // int getWidth() const;
+    // int getHeight() const;
+    // void print() const;
+    // void setWidth(int w);
+    // void setHeight(int h);
+    // //
+    // void setContent(vector<string> c);
+    // void addContent(string s);
+    // void clearContent();
+    // void resize(int w, int h);
+    // //
+    // void printContent() const;
+    // void printWidth() const;
+    // void printHeight() const;
+    // void printSize() const;
+    // void printAll() const;
+
+    // Function Declaration
+    int getWidth() const
+    {
         return width;
     }
 
-    int get_height(){
+    int getHeight() const
+    {
         return height;
     }
 
-    void print(){
-        for(auto& x : data){
-            cout << x << endl;
+    void setwidth(int w)
+    {
+        width = w;
+    }
+
+    void setHeight(int h)
+    {
+        height = h;
+    }
+
+    void setContent(vector<string> c)
+    {
+        content = c;
+    }
+
+    // function - add content to the Picture object
+    void addContent(string s)
+    {
+        content.push_back(s);
+    }
+
+    // function to clear picture object, width and height
+    void clearPicture()
+    {
+        content.clear();
+        width = 0;
+        height = 0;
+    }
+
+    void Resize(int w, int h)
+    {
+        width = w;
+        height = h;
+    }
+
+    void printcontent()
+    {
+        for (int i = 0; i < content.size(); i++)
+        {
+            cout << content[i] << endl;
         }
     }
-
-    vector<string> get_data(){
-        return data;
+    void printWidth() const
+    {
+        cout << width << endl;
     }
 
-    void hflip(){
-        for(auto& x : data){
-            reverse(x.begin(), x.end());
-        }
+    void printHeight() const
+    {
+        cout << height << endl;
     }
 
-    void vflip(){
-        reverse(data.begin(), data.end());
-    }
-    
-    picture hcat(vector<string> pic){
-        vector<string> temp = this->data;
-        for(int i = 0; i < pic.size(); i++){
-            temp[i] += pic[i];
-        }
-        return picture(temp);
+    void printSize() const
+    {
+        cout << "The width of this picture is: " << width
+             << endl;
+
+        cout << "The height of this picture is: " << height
+             << endl;
     }
 
-    picture vcat(vector<string> pic){
-        vector<string> temp = this->data;
-        for(auto& x : pic){
-            temp.push_back(x);
-        }
-        return picture(temp);
+    // function - copy a Picture object
+    Picture copyPicture()
+    {
+        Picture temp;
+        temp.width = width;
+        temp.height = height;
+        temp.content = content;
+        return temp;
     }
 
-    void fill(){
-        for(auto& x : data){
-            if(x.size() < width){
-                x += string(width - x.size(), '_');
+    void resize(int w, int h)
+    {
+        if (w > width)
+        {
+            for (int i = 0; i < content.size(); i++)
+            {
+                content[i] += string(w - width, ' ');
             }
         }
-    }
-
-    void resize(int w , int h){
-        if(w > width){
-            for(auto& x : data){
-                x += string(w - x.size(), '_');
+        else if (w < width)
+        {
+            for (int i = 0; i < content.size(); i++)
+            {
+                content[i] = content[i].substr(0, w);
             }
         }
-        else{
-            for(auto& x : data){
-                x = x.substr(0, w);
+        if (h > height)
+        {
+            for (int i = 0; i < h - height; i++)
+            {
+                content.push_back(string(w, ' '));
             }
         }
-        if(h > height){
-            for(int i = 0; i < h - height; i++){
-                data.push_back(string(w, '_'));
-            }
-
-        }
-        else{
-            data = vector<string>(data.begin(), data.begin() + h);
+        else if (h < height)
+        {
+            content.resize(h);
         }
         width = w;
         height = h;
     }
 
-    
+    // function - pass a Picture object to a function
+    void passPicture(Picture p)
+    {
+        p.printAll();
+    }
+
+    void printAll() const
+    {
+
+        // BOLD
+        char esc_char = 27;
+        string word = "====================information of this picture====================";
+
+        cout << esc_char << "[1m" << word << esc_char << "[0m"
+             << endl;
+
+        cout << "The width of this picture is: " << width
+             << endl;
+
+        cout << "The height of this picture is: " << height
+             << endl;
+
+        for (int i = 0; i < content.size(); i++)
+        {
+            cout << content[i] << endl;
+        }
+    }
+
+    void hcat(const Picture &p1, const Picture &p2)
+    {
+        Picture temp;
+        temp.width = p1.width + p2.width;
+        cout << temp.width << endl;
+
+        temp.height = max(p1.height, p2.height);
+        cout << temp.height << endl;
+
+        for (int i = 0; i < temp.height; i++)
+        {
+            string s;
+            if (i < p1.height)
+            {
+                s += p1.content[i];
+            }
+            else
+            {
+                s += string(p1.width, ' ');
+            }
+            if (i < p2.height)
+            {
+                s += p2.content[i];
+            }
+            else
+            {
+                s += string(p2.width, ' ');
+            }
+            temp.content.push_back(s);
+        }
+
+        for (int i = 0; i < temp.content.size(); i++)
+        {
+            cout << temp.content[i] << endl;
+        }
+    }
+
+    void vcat(const Picture &p1, const Picture &p2)
+    {
+        Picture temp;
+        temp.width = max(p1.width, p2.width);
+        temp.height = p1.height + p2.height;
+        for (int i = 0; i < p1.height; i++)
+        {
+            temp.content.push_back(p1.content[i]);
+        }
+        for (int i = 0; i < p2.height; i++)
+        {
+            temp.content.push_back(p2.content[i]);
+        }
+        cout << temp.width << endl;
+        cout << temp.height << endl;
+        for (int i = 0; i < temp.content.size(); i++)
+        {
+            cout << temp.content[i] << endl;
+        }
+    }
 };
 
-int main(){
-    vector<string> pic = {
-    "_____/XXXXXXXXX________/XXXXXXXXXXX__________/XXXXXXXXX__/XXXXXXXXXXX__/XXXXXXXXXXX_________",
-    "____/XXXXXXXXXXXXX____/XXX/////////XXX_____/XXX////////__X/////XXX///__X/////XXX///_________",
-    "____/XXX/////////XXX__X//XXX______X///____/XXX/_______________X/XXX_________X/XXX___________",
-    "____X/XXX_______X/XXX___X////XXX__________/XXX_________________X/XXX_________X/XXX__________",
-    "_____X/XXXXXXXXXXXXXXX______X////XXX______X/XXX_________________X/XXX_________X/XXX_________",
-    "______X/XXX/////////XXX_________X////XXX___X//XXX________________X/XXX_________X/XXX________",
-    "_______X/XXX_______X/XXX__/XXX______X//XXX___X///XXX______________X/XXX_________X/XXX_______",
-    "________X/XXX_______X/XXX_X///XXXXXXXXXXX/______X////XXXXXXXXX__/XXXXXXXXXXX__/XXXXXXXXXXX__",
-    "_________X///________X///____X///////////___________X/////////__X///////////__X///////////__", 
-    };
-
-    vector<string> pic2 = {
-        "XXXXXXXXXXXX_______________________",
-        "X//////////X_______________________",
-        "X_________X________________________",
-        "X_________X________________________",
-        "X_________X________________________",
-        "X_________X________________________",
-        "X_________X________________________",
-        "X_________X________________________",
-        };
-
+int main()
+{
     vector<string> flower = {
         "██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████",
         "██████████████████████████████████████████████████████████████████████████████████████████████▓▓▒▒▒▒██████████████████████████████",
@@ -195,37 +332,80 @@ int main(){
         "██████████████████████████████████████████████████████████████████████████████████▓▓██████████████████████████████████░░░░▓▓██████",
     };
 
-    picture p1 = picture(pic);
-    picture p2 = picture(pic2);
-    p1.print();
-    cout << "pic width : " << p1.get_width() << endl << "pic height : " << p1.get_height() << endl;
+    vector<string> flower2 = {
 
-    p1.hflip();
-    p1.print();
-    cout << endl;
+        "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░░░░▒▒▓▓▓▓▒▒░░░░▓▓▓▓▓▓░░▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒░░▒▒▓▓▓▓░░░░░░░░░░▒▒░░░░░░░░░░░░░░░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░░░░░░░░▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒  ░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒░░░░░░░░░░░░░░▓▓▓▓▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒  ░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒░░▒▒▒▒▒▒░░░░▓▓▒▒▒▒▒▒▒▒░░▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░  ░░░░░░▒▒░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒░░░░▒▒▒▒▒▒░░░░░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░░░░░░░░░░░░░░▒▒▒▒░░░░░░░░░░░░░░░░▒▒▒▒░░▒▒▒▒▒▒░░▒▒▒▒▒▒░░░░▒▒░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░▒▒▒▒░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒░░▒▒▒▒▒▒░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░▒▒▒▒▒▒░░░░░░░░░░░░░░░░▒▒░░▒▒▒▒▓▓▒▒▒▒▒▒▒▒░░▒▒▒▒░░░░░░░░░░▒▒▓▓▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░▒▒▒▒▒▒░░░░░░░░░░░░░░░░▒▒░░░░▒▒▒▒▒▒▒▒▒▒░░▒▒▒▒  ░░░░░░░░░░░░▒▒▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░░░░░░░░░░░░▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░▒▒░░▒▒▓▓▒▒░░▒▒░░░░▒▒░░░░░░░░░░░░░░░░▒▒▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░▒▒░░▒▒░░░░░░░░░░░░░░░░░░░░▒▒░░▒▒░░░░▒▒░░░░▒▒░░░░░░▒▒░░░░▓▓▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓▓▓▒▒░░  ░░░░░░░░░░░░░░░░░░░░░░░░▒▒░░░░░░  ░░░░░░░░▒▒░░▒▒░░░░░░░░▒▒░░░░░░░░░░░░░░▒▒▓▓▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓░░        ░░░░░░░░░░░░░░▒▒░░░░░░░░░░░░░░  ░░░░░░░░▒▒░░░░░░░░░░░░░░░░▒▒▒▒░░░░  ▒▒▓▓▓▓▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓░░        ░░░░░░▒▒░░░░░░░░░░░░░░░░▒▒░░░░  ░░░░░░░░░░▒▒░░░░░░░░░░░░▒▒░░░░░░  ░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+        "▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░▒▒▒▒░░░░░░▒▒░░░░░░░░░░░░░░░░░░▒▒▒▒░░░░░░░░  ░░░░░░    ░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓",
+        "██▓▓▓▓▓▓░░░░  ░░░░░░░░░░░░░░░░▒▒░░░░░░░░░░░░▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░  ▒▒░░░░    ░░▓▓▒▒▒▒▒▒▒▒▒▒░░▒▒▒▒▒▒",
+        "██▓▓▓▓▓▓▓▓░░░░░░░░░░░░▒▒▒▒░░░░░░▒▒▒▒░░░░▒▒▒▒▒▒▓▓▓▓▒▒▒▒▒▒▓▓▒▒░░░░░░░░░░    ▒▒▓▓▒▒▒▒░░░░░░░░░░░░▒▒▒▒▒▒",
+        "████▓▓░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒░░░░▒▒▒▒▒▒▒▒▓▓░░░░▒▒░░▓▓▓▓▒▒▒▒░░░░    ▒▒▒▒░░░░                ░░░░░░",
+        "██▓▓░░░░░░░░░░░░░░░░░░▒▒░░░░░░░░░░░░▒▒▒▒▓▓▓▓▒▒██▓▓▒▒▓▓░░▓▓▓▓▒▒░░░░▒▒░░      ░░░░░░░░░░░░░░░░░░░░░░▒▒",
+        "██▓▓▒▒░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒░░░░░░░░▒▒▒▒▓▓██░░▒▒▒▒▓▓▓▓▓▓▒▒▓▓▓▓▒▒░░  ░░░░░░░░░░        ░░░░░░░░░░░░▒▒",
+        "██▓▓▒▒░░░░░░░░░░░░░░░░░░░░░░░░▒▒░░▒▒▒▒▓▓▓▓▒▒▓▓▒▒▒▒▓▓▒▒▓▓▓▓▒▒▓▓▒▒░░░░      ░░░░░░░░░░░░░░░░▒▒▒▒░░░░▒▒",
+        "██▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▓▓▒▒▓▓▓▓▒▒▓▓▓▓▓▓▓▓▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓▓",
+        "██▓▓░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓░░▓▓▒▒░░░░  ░░  ░░░░░░░░░░░░░░░░░░░░░░▒▒▓▓▓▓",
+        "████▓▓▒▒░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░▒▒▒▒▓▓▓▓▓▓▓▓▓▓▒▒▓▓██▓▓▓▓▒▒▒▒▒▒░░░░            ░░░░░░░░▒▒▓▓▓▓▓▓▓▓",
+        "██████▓▓░░▒▒▒▒▒▒░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓░░▒▒▒▒▓▓░░▓▓▒▒░░░░██▓▓▒▒  ░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+        "██████████▓▓▒▒░░░░▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓░░░░░░▒▒▒▒▓▓▒▒░░▓▓▓▓▓▓▓▓░░░░      ░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓",
+        "████████▓▓▓▓▓▓▓▓░░░░▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░▓▓▒▒▓▓▓▓▒▒▓▓░░░░  ░░        ░░░░░░░░░░░░░░░░░░░░▓▓▓▓▓▓▓▓",
+        "████████████░░    ░░░░░░▒▒░░░░░░░░░░  ░░  ░░▒▒▒▒░░░░░░▒▒▒▒    ░░  ░░      ░░▒▒░░░░░░░░░░░░░░░░▓▓▓▓▓▓",
+        "██████████░░    ░░  ░░░░░░░░░░░░░░░░░░  ░░▒▒░░░░░░  ░░░░░░░░    ░░  ░░░░░░░░░░▒▒▒▒▒▒░░░░░░░░░░▒▒▓▓▓▓",
+        "████████▓▓░░░░    ░░░░░░░░░░  ░░  ░░░░░░▒▒░░        ░░  ▒▒░░      ░░░░░░░░░░░░░░░░▒▒▒▒▒▒░░░░░░░░▓▓▓▓",
+        "████████░░░░      ░░░░  ░░░░░░░░░░░░░░░░▒▒░░  ░░          ░░▒▒    ░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒░░▒▒▓▓▓▓",
+        "████████░░░░░░░░░░░░  ░░░░░░░░▒▒▒▒░░░░▒▒░░    ░░        ░░▒▒░░░░    ░░░░░░░░░░░░░░░░▒▒▒▒░░░░░░▒▒▓▓▓▓",
+        "████████▓▓░░░░░░    ░░░░░░░░▒▒▒▒░░░░▒▒▒▒░░    ░░    ░░░░  ░░▒▒▒▒▒▒  ░░░░▒▒░░▒▒░░░░░░░░▒▒▒▒▒▒▓▓▓▓▓▓▓▓",
+        "██████████▒▒░░░░░░░░░░░░░░▒▒░░░░░░▒▒▓▓░░░░░░  ░░    ░░░░  ░░▒▒░░▒▒░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+        "████████████▓▓▓▓  ░░░░░░▒▒░░░░▒▒░░▓▓▒▒░░░░  ░░    ░░░░░░  ░░▒▒▒▒▒▒▒▒░░░░░░░░▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+        "████████████████░░░░░░▒▒░░▒▒░░░░▓▓▒▒░░░░░░░░░░░░  ░░░░░░  ░░▒▒▒▒░░▒▒▒▒▒▒░░░░▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓",
+        "████████████████░░▒▒░░▒▒▒▒░░▓▓▓▓▒▒░░░░░░░░░░░░░░░░░░░░▒▒  ░░▒▒▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒████▓▓▓▓▓▓▓▓▓▓",
+        "████████████████▓▓░░░░░░▓▓██▒▒▒▒▒▒░░▒▒░░░░▒▒▒▒░░░░░░░░▒▒  ░░▒▒▒▒▒▒░░▒▒░░▒▒▓▓▓▓▒▒▒▒▒▒▓▓██████▓▓▓▓▓▓▓▓",
+        "████████████████████████████▒▒▒▒░░░░░░░░░░▓▓▒▒░░░░░░░░▒▒░░░░▒▒▒▒▒▒░░▒▒░░▒▒▓▓▓▓▓▓████████████████▓▓▓▓",
+        "████████████████████████████▒▒▒▒░░▒▒░░░░▒▒▓▓▒▒░░░░░░░░▒▒░░▒▒▒▒▒▒▒▒░░░░▒▒░░▒▒▓▓██████████████████████",
+        "████████████████████████████░░▒▒░░▒▒░░░░▓▓▓▓▒▒░░░░░░▒▒▒▒░░▒▒▒▒▒▒▒▒▒▒░░▒▒░░▒▒████████████████████████",
+        "████████████████████████████░░░░░░░░░░▓▓▓▓▓▓▒▒▒▒░░▒▒▒▒▒▒░░▒▒▓▓▓▓▒▒░░▒▒▒▒▒▒▒▒████████████████████████",
+        "██████████████████████████████▒▒░░░░▓▓▓▓▒▒▒▒▒▒▒▒░░▒▒▒▒▒▒▒▒▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▓▓████████████████████████",
+        "████████████████████████████████▓▓████▒▒▒▒▒▒▒▒██▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓██▓▓▒▒▒▒▒▒██████████████████████████",
+        "████████████████████████████████████████▒▒▒▒██████▒▒▓▓▓▓██▓▓▓▓▓▓████████████████████████████████████",
+    };
 
-    p1.vflip();
-    p1.print();
+    Picture p1 = Picture(flower);
+    Picture p2 = Picture(flower2);
+    p1.printAll();
+    p2.printAll();
+    vector<string> flower3 = {};
+    Picture p3 = Picture(flower3);
     cout << endl;
+    p3.vcat(p1, p2);
 
 
-    picture p3 = p1.hcat(p2.get_data());
-    p3.print();
-    cout << endl;
-    p3.fill();
-    p3.print();
-    cout << endl;
+    p1.resize(130, 21);
+    p1.printAll();
 
-    picture p4 = p1.vcat(p2.get_data());
-    p4.print();
-    cout << endl;
-    p4.fill();
-    p4.print();
-    cout << endl;
+    // p3.hcat(p1, p2);
+    
+    // cout << p1.getWidth() << endl;
+    // cout << p1.getHeight() << endl;
+    
+    // p3.printAll();
 
-    p4.resize(100, 100);
-    p4.print();
-    cout << endl;
+    // cout << p1.getWidth() << endl;
+    // cout << p1.getHeight() << endl;
+
 
     return 0;
 }
