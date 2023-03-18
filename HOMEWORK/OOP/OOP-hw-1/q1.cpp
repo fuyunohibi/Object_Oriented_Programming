@@ -4,10 +4,6 @@
 
 using namespace std;
 
-class Mobile {
-    
-}
-
 // // Start::OOP_HW_1.1
 
 // void generateFrame(string warrior, string mage, string ninja, string fighter) {
