@@ -3,8 +3,6 @@
 #include <sstream>
 #include <string>
 
-
-
 class Shape
 {
 public:
