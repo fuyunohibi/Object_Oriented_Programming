@@ -2,55 +2,80 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
 class Writer
 {
 public:
-    virtual void write(const std::string &str) const = 0;
+    //TODO: pure virtual function write needs to be implemented
+    virtual void write(const string &str) const = 0;
     virtual ~Writer() = default;
 };
 
+// Implement the Writer class for HTML output
 class HTMLWriter : public Writer
 {
 public:
-    void write(const std::string &str) const override
+    void write(const string &str) const override
     {
-        std::cout << str;
+        cout << str; 
     }
 };
 
+// class for generic HTML element
 class Doc_element
 {
 public:
+    
     void write_document(const Writer &w) const
     {
-        write_to(w, 0);
+        w.write("<!DOCTYPE html>\n"); 
+        w.write("<html>\n");
+        write_to(w, 1); // Write the contents of the document
+        w.write("</html>\n");        
     }
 
+    // Write the contents of this element and its children to the specified writer
     void write_to(const Writer &w, int lv) const
     {
+        // Write the opening tag
         for (int i = 0; i < lv; ++i)
-            w.write("  ");
-        w.write("<" + name_ + ">\n");
-        for (const auto &child : children_)
-            child.write_to(w, lv + 1);
-        for (int i = 0; i < lv; ++i)
-            w.write("  ");
-        w.write("</" + name_ + ">\n");
+            w.write("  "); // Indent according to the current level
+        if (children_.empty())
+        {
+            // text node, don't add angle brackets
+            w.write(name_ + "\n");
+        } else {
+
+            // not a text node, add angle brackets
+            w.write("<" + name_ + ">\n");
+
+            // Write - children nodes
+            for (const auto &child : children_)
+                child.write_to(w, lv + 1);
+
+            // Write - closing tag
+            for (int i = 0; i < lv; ++i)
+                w.write("  "); // Indent according to the current level
+            w.write("</" + name_ + ">\n");
+        }
     }
 
-    static Doc_element text(const std::string &t)
+    // Create a text node with the specified content
+    static Doc_element text(const string &t)
     {
         return Doc_element(t);
     }
 
-    explicit Doc_element(const std::string &n) : name_(n) {}
+    // Create an element with the specified name and children
+    explicit Doc_element(const string &n) : name_(n) {}
 
-    Doc_element(const std::string &n, const std::vector<Doc_element> &children)
+    Doc_element(const string &n, const vector<Doc_element> &children)
         : name_(n), children_(children) {}
 
 private:
-    std::string name_;
-    std::vector<Doc_element> children_;
+    string name_;
+    vector<Doc_element> children_;
 };
 
 int main()
