@@ -12,6 +12,7 @@ public:
     virtual ~Writer() = default;
 };
 
+
 // Implement the Writer class for HTML output
 class HTMLWriter : public Writer
 {
@@ -22,9 +23,14 @@ public:
     }
 };
 
+
 // class for generic HTML element
 class Doc_element
 {
+private:
+    string name_;
+    vector<Doc_element> children_;
+
 public:
     
     void write_document(const Writer &w) const
@@ -72,11 +78,9 @@ public:
 
     Doc_element(const string &n, const vector<Doc_element> &children)
         : name_(n), children_(children) {}
-
-private:
-    string name_;
-    vector<Doc_element> children_;
 };
+
+
 
 int main()
 {
