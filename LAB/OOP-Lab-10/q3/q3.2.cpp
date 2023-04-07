@@ -16,7 +16,7 @@ private:
 public:
    Array(vector<vector<int>> data) : data_(data) {}
 
-   string to_string() const
+   string repr() const
    {
       stringstream ss;
       ss << "Array(";
@@ -81,7 +81,6 @@ int main()
       }
    }
 
-
    for (int i = 0; i < data.size(); i++)
    {
       for (int j = 0; j < data[i].size(); j++)
@@ -93,8 +92,7 @@ int main()
    cout << "Completed\n\n";
 
    Array arr(data);
-   cout << "Output: " << arr.to_string() << endl;
+   cout << "Output: " << arr.repr() << endl;
 
    return 0;
 }
-
