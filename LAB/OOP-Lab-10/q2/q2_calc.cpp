@@ -246,6 +246,8 @@ try
     Expression expr{0};
     while (std::cin)
     {
+        std::cout << "============ Example Input {(4+5)*6} / (3+4); ============\n";
+        std::cout << "Please Enter Expression (Ending with ;) : ";
         Token t = ts_input.get();
         if (t.kind == Token::quit)
             break;
