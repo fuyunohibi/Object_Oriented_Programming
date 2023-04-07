@@ -49,6 +49,8 @@ Name:
 
 #include <istream>
 
+using namespace std;
+
 struct Token
 {
 public:
@@ -183,34 +185,27 @@ double expression(Token_stream &ts)
     }
 }
 
-int main(int argc, const char *const *const argv)
+int main()
 try
 {
-    if (argc < 2)
-        return 0;
-
-    std::string data{argv[1]};
-    for (auto i = 2; i < argc; ++i)
-    {
-        data.append(1, ' ').append(argv[i]);
-    }
-
-    std::istringstream iss(data);
-    Token_stream ts_input(iss);
+    Token_stream ts_input(std::cin);
 
     double val = 0;
-    while (iss)
+    while (std::cin)
     {
+        cout << "============ Example Input {(4+5)*6} / (3+4); ============\n";
+        cout << "Please Enter Expression (Ending with ;) : ";
         Token t = ts_input.get();
         if (t.kind == Token::quit)
             break;
         if (t.kind == Token::print)
-            std::cout << "=" << val << '\n';
+            std::cout << "= " << val << '\n';
         else
             ts_input.putback(t);
 
         val = expression(ts_input);
     }
+
     return 0;
 }
 catch (const std::exception &e)
@@ -218,6 +213,7 @@ catch (const std::exception &e)
     std::cerr << "Exception: " << e.what() << '\n';
     return 1;
 }
+
 catch (...)
 {
     std::cerr << "Unknown exception\n";
